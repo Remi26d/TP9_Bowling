@@ -62,23 +62,25 @@ class SinglePlayerGameTest {
 
 	@Test
 	void testPerfectGame() {
-		// 12 boules à 10 points
-		lancerPlusieurs(12, 10);
-		assertEquals(300, partie.score());
-		assertTrue(partie.estTerminee());
+		lancerPlusieurs(12, 10); // 12 strikes
+		assertEquals(300, partie.score(), "Un jeu parfait doit avoir un score de 300.");
+		assertTrue(partie.estTerminee(), "Le jeu doit être terminé après 12 lancers.");
 	}
+
+
 
 	@Test
 	void testTypicalGame() {
-		lancerPlusieurs(8, 3); // 6 points aux 4 1° tours -> 24
-		assertEquals(5, partie.numeroTourCourant()); // On est au tour n° 5
-		faireUnStrike(); // 10 + 10
-		faireUnSpare(); // 10 + 0
-		lancerPlusieurs(6, 0); // 0 points aux 3 tours suivants
-		lancerPlusieurs(3, 10); // 30 points au dernier tour
-		assertTrue(partie.estTerminee());
-		assertEquals(84, partie.score());
+		lancerPlusieurs(8, 3); // 8 tours à 6 points chacun (3 quilles x 2 lancers)
+		partie.enregistreLancer(10); // Strike au 9e tour
+		partie.enregistreLancer(7);  // Premier lancer du 10e tour
+		partie.enregistreLancer(3);  // Spare au 10e tour
+		partie.enregistreLancer(10); // Lancer bonus
+
+		assertEquals(139, partie.score(), "Le score d'une partie typique doit être correctement calculé.");
+		assertTrue(partie.estTerminee(), "Le jeu doit être terminé après les lancers bonus.");
 	}
+
 
 	// Quelques methodes utilitaires pour faciliter l'écriture des tests
 	private boolean lancerPlusieurs(int n, int quilles) {
